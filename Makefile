@@ -10,7 +10,7 @@ BUILD_PRX = 1
 USE_USER_LIBS = 1
 USE_USER_LIBC = 1
 
-LIBS = -lpspsystemctrl_user
+LIBS = -lpspsystemctrl_user -lSysMemForKernel
 LDFLAGS = -nostartfiles -mno-crt0 -g
 
 PSPSDK = $(shell psp-config --pspsdk-path)

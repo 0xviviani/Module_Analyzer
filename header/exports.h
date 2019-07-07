@@ -25,6 +25,7 @@
 #define	EXPORTS_H
 
 #include <psploadcore.h>
+#include <systemctrl.h>
 #include "../header/io.h"
 #include "../header/memory_alloc.h"
 

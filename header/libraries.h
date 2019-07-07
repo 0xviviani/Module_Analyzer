@@ -24,6 +24,7 @@
 #ifndef LIBRARIES_H
 #define	LIBRARIES_H
 
+#include <systemctrl.h>
 #include <pspiofilemgr.h>
 #include <psploadcore.h>
 #include <psptypes.h>

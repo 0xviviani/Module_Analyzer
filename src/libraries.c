@@ -15,6 +15,7 @@
  * along with Module_Analyzer. If not, see <http://www.gnu.org/licenses/ .
  */
 
+#include <systemctrl.h>
 #include "../header/libraries.h"
 #include "../header/memory_alloc.h"
 

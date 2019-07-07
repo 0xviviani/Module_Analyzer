@@ -16,6 +16,8 @@
  */
 
 #include "../header/exports.h"
+#include "../header/main.h"
+
 
 const char *analyze_exported_nid(u32 nid) {
     switch(nid) {
