@@ -30,7 +30,7 @@
 #include "../header/segments.h"
 
 /** The basic file path for module library imports. */
-#define MODULE_LIB_IMPORTS_FILE_PATH                   "ms0:/Module_Analyzer/Your_Program_Name/%s_imports.txt"
+#define MODULE_LIB_IMPORTS_FILE_PATH                   "ms0:/Module_Analyzer/%s/%s_imports.txt"
 
 /** The layout of an imported NID info line. */
 #define IMPORTED_NID_INFO_LINE                         "\t NID_%03d: 0x%08X - stub address: 0x%08X\n"

@@ -16,6 +16,7 @@
  */
 
 #include "../header/segments.h"
+#include "../header/main.h"
 
 /**
  * Add segment attributes to a buffer ready to be printed.
@@ -83,8 +84,13 @@ void map_segments(SceModule2 *mod, const char *modName, LibStubSegment *libSegPt
     int blockId;
     u32 segBufSize = libNameLengths + DEFAULT_SEG_BUF_SIZE * impLibs;
     
-    sprintf(buf, MODULE_MEM_SEGMENTS_FILE_PATH, modName);
-    ioObjDesc = create_open_IoObject(IO_FILE, buf, PSP_O_RDWR | PSP_O_CREAT | PSP_O_TRUNC, 0777);
+	memset(path_base, 0, sizeof(path_base));
+	if (gameId[0] != 0x00)
+		sprintf(path_base, MODULE_MEM_SEGMENTS_FILE_PATH, gameId, modName);
+	else
+		sprintf(path_base, MODULE_MEM_SEGMENTS_FILE_PATH, path_brewName,
+				modName);
+	ioObjDesc = create_open_IoObject(IO_FILE, path_base, PSP_O_RDWR | PSP_O_CREAT | PSP_O_TRUNC, 0777);
     
     if (IO_OBJECT_DESCRIPTOR_VALID(ioObjDesc)) {
         segBuf = (char *)allocate_memory_buffer(&blockId, MEM_PARTITION_USER, "Memory_Segments", 

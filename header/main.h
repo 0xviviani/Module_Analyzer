@@ -46,14 +46,17 @@
 /** The start value of the module counter. */
 #define START_COUNTER_VAL                       (1)
 
+/** The limited length of the game path */
+#define PATH_LEN 								(128)
+
 /** The basic folder path. */
-#define BASE_DIR_PATH                           "ms0:/Module_Analyzer/"
+#define BASE_DIR_PATH                           "ms0:/Module_Analyzer"
 
 /** The basic folder path for import/export files. */
-#define BASE_GAME_DIR_PATH                      "ms0:/Module_Analyzer/Your_Program_Name/"
+#define BASE_GAME_DIR_PATH                      "ms0:/Module_Analyzer/%s"
 
 /** The path for the text file containing the loaded modules info. */
-#define GAME_MODULE_FILE_PATH                   "ms0:/Module_Analyzer/Your_Program_Name/modules.txt"
+#define GAME_MODULE_FILE_PATH                   "ms0:/Module_Analyzer/%s/modules.txt"
 
 /** The layout of a .stub segment info line. */
 #define STUB_SEGMENT_INFO_LINE                  "\t - .stub segment: 0x%08X - 0x%08X\n"
@@ -79,5 +82,11 @@
 /** The maximal length of a module attribute info line. */
 #define MAX_INFO_LINE_LENGTH                    STUB_SEGMENT_INFO_LINE_LENGTH
 
+/* Globals needed to setup the game and homebrew paths */
+SceUID thid;
+SceUID fd;
+unsigned char gameId[9];
+char path_base[PATH_LEN];
+char path_brewName[PATH_LEN/2];
 
 #endif	/* MAIN_H */

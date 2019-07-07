@@ -27,7 +27,6 @@ int create_open_IoObject(IoObject objectFlag, const char *path, int flags, SceMo
         case IO_DIRECTORY:
             ioObjDesc = sceIoDopen(path);
             if (!IO_OBJECT_DESCRIPTOR_VALID(ioObjDesc)) {
-                memset(strrchr(path, '/'), 0, 1);
                 sceIoMkdir(path, mode);
                 ioObjDesc = sceIoDopen(path);
             }

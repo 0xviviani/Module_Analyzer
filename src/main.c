@@ -17,9 +17,46 @@
 
 #include "../header/main.h"
 
+#define SCE_INIT_APITYPE_MS2 0x141
+#define SCE_INIT_APITYPE_EF2 0x152
+
 PSP_MODULE_INFO(MODULE_NAME, PSP_MODULE_KERNEL, MOD_VER_MAJ, MOD_VER_MIN);
 
 STMOD_HANDLER prev = NULL;
+
+/*
+ * Verifies if we're running a game or running homebrew by checking the ApiType.
+ */
+int isGame(void) {
+	int api = sceKernelInitApitype();
+
+	if (api == SCE_INIT_APITYPE_MS2 || api == SCE_INIT_APITYPE_EF2)
+		return -1;
+
+	memset(path_base, 0, sizeof(path_base));
+	memset(gameId, 0, sizeof(gameId));
+
+	strcpy(gameId, sceKernelGetGameInfo() + 0x44);
+	sprintf(path_base, BASE_GAME_DIR_PATH, gameId);
+
+	create_open_IoObject(IO_DIRECTORY, path_base, 0, 0777);
+
+	return 0;
+}
+
+/* 
+ * This only runs if the ApiType check in "isGame" fails. If it's gotten to this point, it must be homebrew.
+ */
+void isHomebrew(void) {
+	memset(path_base, 0, sizeof(path_base));
+	memset(path_brewName, 0, sizeof(path_brewName));
+
+	strcpy(path_brewName, sceKernelInitFileName() + 0xE);
+	stripTrail (path_brewName);
+	sprintf(path_base, BASE_GAME_DIR_PATH, path_brewName);
+
+	create_open_IoObject(IO_DIRECTORY, path_base, 0, 0777);
+}
 
 /**
  * Print attributes of a module: stub. segment location, entry address, global pointer value.
@@ -95,10 +132,15 @@ static void get_module_list(SceModule2 *mod) {
     
     memset(modNameBuf, 0, sizeof(modNameBuf));
     memset(modName, 0, sizeof(modName));
+	memset(path_base, 0, sizeof(path_base));
     
     strcpy(modName, mod->modname);
-    ioObjDesc = create_open_IoObject(IO_FILE, GAME_MODULE_FILE_PATH, ioOpenFileFlag, 0777);
-    if (IO_OBJECT_DESCRIPTOR_VALID(ioObjDesc)) {
+	if (gameId[0] != 0x00)
+		sprintf(path_base, GAME_MODULE_FILE_PATH, gameId);
+	else
+		sprintf(path_base, GAME_MODULE_FILE_PATH, path_brewName);
+	ioObjDesc = create_open_IoObject(IO_FILE, path_base, ioOpenFileFlag, 0777);
+	if (IO_OBJECT_DESCRIPTOR_VALID(ioObjDesc)) {
         if (strncmp(modName, "sce", 3) == 0) {
             modNameLength = sprintf(modNameBuf, "Name of module_%02d: %s\n", modCount, modName);
             sceIoWrite(ioObjDesc, modNameBuf, modNameLength);
@@ -112,6 +154,24 @@ static void get_module_list(SceModule2 *mod) {
         ioOpenFileFlag = PSP_O_RDWR | PSP_O_CREAT | PSP_O_APPEND;
         modCount++;       
     }
+}
+
+/*
+ * Strips off the trailing ends from the buffer so we can make the directory.
+ */
+void stripTrail(char buf[]) {
+	int i, offset;
+
+	// Get the offset of '/'
+	for (offset = PATH_LEN; offset > 0; offset--) {
+		if (buf[offset] == '/') {
+			break;
+		}
+	}
+
+	// fill with 0's
+	for (i = offset; i < PATH_LEN; i++)
+		buf[i] = 0x00;
 }
 
 /**
@@ -128,7 +188,8 @@ static int on_module_start(SceModule2 *mod) {
  */
 int module_start(int args, void *argp) {
     create_open_IoObject(IO_DIRECTORY, BASE_DIR_PATH, 0, 0777);
-    create_open_IoObject(IO_DIRECTORY, BASE_GAME_DIR_PATH, 0, 0777);
+	if (isGame() == -1)
+		isHomebrew();
     
     prev = sctrlHENSetStartModuleHandler(on_module_start);    
     return 0;

@@ -30,7 +30,7 @@
 #include "../header/memory_alloc.h"
 
 /** The basic file path for module library exports. */
-#define MODULE_LIB_EXPORTS_FILE_PATH                   "ms0:/Module_Analyzer/Your_Program_Name/%s_exports.txt"
+#define MODULE_LIB_EXPORTS_FILE_PATH                   "ms0:/Module_Analyzer/%s/%s_exports.txt"
 
 /** The layout of an exported NID info line. */
 #define EXPORTED_NID_INFO_LINE                         "\t NID_%03d: 0x%08X - address: 0x%08X //%s\n"

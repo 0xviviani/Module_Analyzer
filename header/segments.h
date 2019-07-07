@@ -30,7 +30,7 @@
 #include "../header/memory_alloc.h"
 
 /** The base file path for the module memory segment. */
-#define MODULE_MEM_SEGMENTS_FILE_PATH           "ms0:/Module_Analyzer/Your_Program_Name/%s_segments.txt"
+#define MODULE_MEM_SEGMENTS_FILE_PATH           "ms0:/Module_Analyzer/%s/%s_segments.txt"
 
 /** The layout a .scratchpad info line. */
 #define SCRATCHPAD_SEG_INFO_LINE                "Segment: .scratchpad: 0x%08X - 0x%08X\n"

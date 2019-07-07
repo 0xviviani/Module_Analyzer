@@ -51,7 +51,7 @@ void get_exported_libraries(SceModule2 *mod, const char *modName) {
 
  void map_exported_functions(int *ioOpenFlag, SceLibraryEntryTable *entTable, const char *modName) {
     char *libExportsBuf = NULL;
-    char buf[128];
+    char buf[128*2];
     u32 exports;
     int ioObjDesc;
     u32 textLength;
@@ -59,9 +59,13 @@ void get_exported_libraries(SceModule2 *mod, const char *modName) {
     int blockId;
     
     memset(buf, 0, sizeof(buf));   
-    
-    sprintf(buf, MODULE_LIB_EXPORTS_FILE_PATH, modName);
-    ioObjDesc = create_open_IoObject(IO_FILE, buf, *ioOpenFlag, 0777);
+    memset(path_base, 0, sizeof(path_base));
+	if (gameId[0] != 0x00)
+		sprintf(path_base, MODULE_LIB_EXPORTS_FILE_PATH, gameId, modName);
+	else
+		sprintf(path_base, MODULE_LIB_EXPORTS_FILE_PATH, path_brewName,
+				modName);
+	ioObjDesc = create_open_IoObject(IO_FILE, path_base, *ioOpenFlag, 0777);
     
     if (IO_OBJECT_DESCRIPTOR_VALID(ioObjDesc)) {
         exports = entTable->stubcount + entTable->vstubcount;

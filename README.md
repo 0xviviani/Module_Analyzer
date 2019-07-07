@@ -1,3 +1,7 @@
 03.04.2016: Development on the project halted. Repository will be kept for the interested user.
 
 Module_Analyzer is a module for the PSP which analyzes the attributes of custom modules (i.e. game modules, homebrew modules) which are loaded during the boot process of a PSP Program. It maps the imported sce functions to their stub addresses and does segment mapping to give you an entry point when you want to start reversing a game/program. 
+
+This fork aims to ease the usage of this module by creating a separate folder for each game or homebrew that is ran.
+
+![Imgur](https://i.imgur.com/a21NA2F.png)

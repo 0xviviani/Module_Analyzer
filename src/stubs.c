@@ -16,6 +16,7 @@
  */
 
 #include "../header/stubs.h"
+#include "../header/main.h"
 
 void map_imported_functions(int *ioOpenFlag, SceLibraryStubTable *stubTable, const char *modName, LibStubSegment *libSegPtr, int *libNameLengths) {
     char *libImportsBuf = NULL;
@@ -27,11 +28,16 @@ void map_imported_functions(int *ioOpenFlag, SceLibraryStubTable *stubTable, con
     u32 libImpBufSize; 
     
     memset(buf, 0, sizeof(buf));    
-    sprintf(buf, MODULE_LIB_IMPORTS_FILE_PATH, modName);
-    ioObjDesc = create_open_IoObject(IO_FILE, buf, *ioOpenFlag, 0777);
-    
-    stubs = stubTable->stubcount;  
-    *libNameLengths += get_importedLibrary_segAttr(stubTable, libSegPtr, stubs);   
+	memset(path_base, 0, sizeof(path_base));
+	if (gameId[0] != 0x00)
+		sprintf(path_base, MODULE_LIB_IMPORTS_FILE_PATH, gameId, modName);
+	else
+		sprintf(path_base, MODULE_LIB_IMPORTS_FILE_PATH, path_brewName,
+				modName);
+	ioObjDesc = create_open_IoObject(IO_FILE, path_base, *ioOpenFlag, 0777);
+
+	stubs = stubTable->stubcount;
+	*libNameLengths += get_importedLibrary_segAttr(stubTable, libSegPtr, stubs);
                
     if (IO_OBJECT_DESCRIPTOR_VALID(ioObjDesc)) {                       
         textLength = sprintf(buf, "-Imported NIDs from library: %s\n", stubTable->libname);
